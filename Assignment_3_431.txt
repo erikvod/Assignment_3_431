@@ -1,14 +1,59 @@
+Assignment 3
+Group: Stephanie Myalik, Erik Vodanovic
+
+--------------------------------
+
 1. Given lambda expressions A and B, show a lambda expression for
                 if A then false else B
     Simplify (i.e. apply any feasible lambda-reduction) as much as possible.
+
+    - Definitions:
+    - false = λx.λy.y
+    - A = λa.a
+    - B = λb.b
+
+    - Expression:
+    - A false B
+    - A (λx.λy.y) B
+
+Author: Stephanie Myalik
+--------------------------------
 
 2. Given lambda expressions A and B, show a lambda expression for
                 A implies (not B)
  Simplify (i.e. apply any feasible lambda-reduction) as much as possible.
 
+
+
+--------------------------------
+
 3. Given lambda expressions A and B, show a lambda expression for
                 A XOR B (A exclusive-OR B)
  Simplify (i.e. apply any feasible lambda-reduction) as much as possible.
+
+    - (A AND (NOT B)) OR ((NOT A) AND B)
+    - AND = λp.λq.p q p
+    - OR = λp.λq.p p q
+    - NOT = λp.λa.λb.p b a
+
+    Simplification:
+    - A AND (NOT B) 
+    = (λp.λq.p q p) A (λp.λa.λb.p b a B)
+    = (λp.λq.p q p) A (λp.λa.λb.p b a B)
+    = (λq.A q A) (λa.λb.B b a)
+    = A (λa.λb.B b a) A
+
+    - (NOT A) AND B 
+    = (λp.λq.p q p) (λa.λb.A b a) B
+    = (λq.(λa.λb.A b a) q (λa.λb.A b a)) B
+    = (λa.λb.A b a) B (λa.λb.A b a)
+
+    - Final expression:
+    (λp.λq.p p q) (A (λa.λb.B b a) A) ((λa.λb.A b a) B (λa.λb.A b a))
+    = (λp.λq.p p q) (A (λa.λb.B b a) A) ((λa.λb.A b a) B (λa.λb.A b a))
+    
+Author: Stephanie Myalik
+--------------------------------
 
 4. Define a subset S of Z^2 = Z x Z (=the set of all pairs of negative, zero, positive integers) by the following rules:
                 (a) (3,2) element-of S
@@ -16,16 +61,65 @@
  Prove, by structural induction, that every element of S looks in fact like ( 2^(n+1) + 1, 2^n + 1 ).
 
 
+
+Author: 
+--------------------------------
+
 In my CLASS 20 slides, a binary tree type is defined by the variant
         type 'a btree = Empty | Node of 'a * 'a btree * 'a btree
     (with related OCaml code; refer to that code), and a number of formulas are claimed to hold true,
      including the following
 
         rev ( inorder ( reflect x ) ) = inorder x (* rev for lists *)
-        postorder ( reflect x ) = rev ( preorder x )
+        postorder ( reflect x ) = rev ( reorder x )
 
 5. Prove, by structural induction, that indeed the shown code, in CLASS 20 slides, implies
                 rev ( inorder ( reflect x ) ) = inorder x (* rev for lists *)
 
+BASE CASE: 
+        x = Empty
+
+        inorder (reflect Empty) = inorder Empty = []
+        rev (inorder (reflect Empty)) = rev [] = []
+        inorder Empty = []
+
+        rev (inorder (reflect Empty)) = inorder Empty
+
+INDUCTION HYPOTHESIS:
+        Assume formula holds true for some subtrees l and r:
+
+        rev (inorder (reflect l)) = inorder l
+        rev (inorder (reflect r)) = inorder r
+
+INDUCTIVE STEP:
+        Prove formula holds true for the "next bigger" tree, Node(n, l, r)
+
+        Consider a binary tree Node(n, l, r)
+
+        inorder (reflect (Node(n, l, r))) 
+        = inorder (Node(n, reflect r, reflect l))
+        = inorder (reflect r) @ [n] @ inorder (reflect l)
+
+    Applying the induction hypothesis to the subtrees reflect r and reflect l:
+    = rev (inorder r) @ [n] @ rev (inorder l)
+
+    Since rev (inorder (reflect x)) = inorder x holds for the subtrees, we have:
+    rev (inorder (reflect (Node(n, l, r))))
+        = rev (rev (inorder l) @ [n] @ rev (inorder r))
+        = inorder l @ [n] @ inorder r
+        = inorder (Node(n, l, r))
+
+Thus, by structural induction:
+rev (inorder (reflect x)) = inorder x
+
+
+Author: Stephanie Myalik
+--------------------------------
+
 6. Prove, by structural induction, that indeed the shown code implies
                 postorder ( reflect x ) = rev ( preorder x )
+
+
+
+Author: 
+--------------------------------
