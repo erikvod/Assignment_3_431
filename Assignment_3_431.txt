@@ -19,16 +19,37 @@ Group: Stephanie Myalik, Erik Vodanovic
 Author: Stephanie Myalik
 --------------------------------
 
-2. Given lambda expressions A and B, show a lambda expression for
-                A implies (not B)
- Simplify (i.e. apply any feasible lambda-reduction) as much as possible.
+### 2. Given lambda expressions A and B, show a lambda expression for
+A implies (not B). Simplify (i.e. apply any feasible lambda-reduction) as much as possible.
 
+#### Definitions:
+- false = λx.λy.y
+- true = λx.λy.x 
+- ¬B = λb.b false true
+- A ⟹ B =  λa.λb.a b true
 
+#### Expression:
+- A⟹(¬B)=(λa.λb.a b true)A(λb.b false true)
 
+#### Simplification:
+1. Substitute A and ¬B into the implication expression:
+   (λa.λb.a b true)(λa.a)(λb.b false true)
+2. Apply (λa.λb.a b true) to (λa.a):
+   (λa.λb.a b true)(λb.b false true)
+3. Apply (λb.b false true) to b:
+   λb.(λb.b false true)b true
+   = λb.(b false true)true
+4. Evaluate b false true:
+   - If b = true, b false true = false.
+   - If b = false, b false true = true.
+
+#### Final Simplified Expression:
+λb.b false true
+
+### Author: Erik Vodanovic
 --------------------------------
 
 3. Given lambda expressions A and B, show a lambda expression for
-                A XOR B (A exclusive-OR B)
  Simplify (i.e. apply any feasible lambda-reduction) as much as possible.
 
     - (A AND (NOT B)) OR ((NOT A) AND B)
@@ -55,14 +76,42 @@ Author: Stephanie Myalik
 Author: Stephanie Myalik
 --------------------------------
 
-4. Define a subset S of Z^2 = Z x Z (=the set of all pairs of negative, zero, positive integers) by the following rules:
-                (a) (3,2) element-of S
-                (b) if (x,y) element-of S, then (3x – 2y, x) element-of S
- Prove, by structural induction, that every element of S looks in fact like ( 2^(n+1) + 1, 2^n + 1 ).
+### 4. Define a subset S of Z^2 = Z x Z (=the set of all pairs of negative, zero, positive integers) by the following rules:
+(a) (3,2) ∈ S  
+(b) If (x,y) ∈ S, then (3x – 2y, x) ∈ S  
 
+Prove, by structural induction, that every element of S looks in fact like (2^(n+1) + 1, 2^n + 1).
 
+#### Proof by Structural Induction:
 
-Author: 
+**Base Case:**  
+From the rule (a), (3, 2) ∈ S.  
+For n = 0:
+(2^(n+1) + 1, 2^n + 1) = (2^(0+1) + 1, 2^0 + 1) = (3, 2).  
+Thus, the base case holds.
+
+**Inductive Hypothesis:**  
+Assume that for some n ≥ 0, (x, y) ∈ S implies (x, y) = (2^(n+1) + 1, 2^n + 1).
+
+**Inductive Step:**  
+We must show that if (x, y) = (2^(n+1) + 1, 2^n + 1), then (3x - 2y, x) ∈ S and also satisfies the claimed form for n+1.
+
+1. Start with (x, y) = (2^(n+1) + 1, 2^n + 1).  
+2. Compute (3x - 2y, x):  
+   Substitute x = 2^(n+1) + 1 and y = 2^n + 1:  
+   3x - 2y = 3(2^(n+1) + 1) - 2(2^n + 1).  
+3. Simplify 3x - 2y:  
+   3(2^(n+1)) + 3 - 2(2^n) - 2 = 3 * 2^(n+1) - 2 * 2^n + 1.  
+   Use 3 * 2^(n+1) - 2 * 2^n = 2^(n+2) + 1:  
+   3x - 2y = 2^(n+2) + 1.  
+4. Thus, the new pair is:  
+   (3x - 2y, x) = (2^(n+2) + 1, 2^(n+1) + 1).  
+5. Observe that this matches the form (2^((n+1)+1) + 1, 2^(n+1) + 1).  
+
+**Conclusion:**  
+By structural induction, every (x, y) ∈ S is of the form (2^(n+1) + 1, 2^n + 1) for n ≥ 0.
+
+### Author: Erik Vodanovic
 --------------------------------
 
 In my CLASS 20 slides, a binary tree type is defined by the variant
@@ -116,10 +165,40 @@ rev (inorder (reflect x)) = inorder x
 Author: Stephanie Myalik
 --------------------------------
 
-6. Prove, by structural induction, that indeed the shown code implies
-                postorder ( reflect x ) = rev ( preorder x )
+### 6. Prove, by structural induction, that indeed the shown code implies
+postorder ( reflect x ) = rev ( preorder x ).
 
+#### Proof by Structural Induction:
 
+**Base Case:**  
+Let x = Empty.  
+- postorder(reflect(Empty)) = postorder(Empty) = [].  
+- preorder(Empty) = [].  
+- rev(preorder(Empty)) = rev([]) = [].  
+Thus, postorder(reflect(Empty)) = rev(preorder(Empty)).
 
-Author: 
+**Inductive Hypothesis:**  
+Assume the formula holds true for some subtrees l and r:  
+- postorder(reflect(l)) = rev(preorder(l)),  
+- postorder(reflect(r)) = rev(preorder(r)).
+
+**Inductive Step:**  
+Prove the formula holds true for Node(n, l, r).  
+1. Consider a binary tree Node(n, l, r).  
+   - reflect(Node(n, l, r)) = Node(n, reflect(r), reflect(l)).  
+2. postorder(reflect(Node(n, l, r))):  
+   - postorder(Node(n, reflect(r), reflect(l))) = postorder(reflect(r)) @ postorder(reflect(l)) @ [n].  
+   - By the inductive hypothesis:  
+     = rev(preorder(r)) @ rev(preorder(l)) @ [n].  
+3. rev(preorder(Node(n, l, r))):  
+   - preorder(Node(n, l, r)) = [n] @ preorder(l) @ preorder(r).  
+   - rev(preorder(Node(n, l, r))) = rev(preorder(r)) @ rev(preorder(l)) @ [n].  
+
+Since both expressions match, the formula holds.
+
+**Conclusion:**  
+By structural induction, postorder(reflect(x)) = rev(preorder(x)).
+
+### Author: Erik Vodanovic
+
 --------------------------------
